@@ -149,7 +149,7 @@ void setup(){
     
     }
   #ifdef ESP8266
-    configTime(0, 0, "pool.ntp.org");      // get UTC time via NTP
+    configTime(0, 0, "time.google.com");      // get UTC time via NTP
     client.setTrustAnchors(&cert); // Add root certificate for api.telegram.org
   #endif
   ///SENDING ONLINE MASSAGE
@@ -531,7 +531,10 @@ static const uint8_t logo[1024] = {
 
 //Servo Function
 void serv() {
-  servo.write(145);//145
+  for(int i; i <= 145; i++ ){
+    servo.write(i);
+    delay(100);
+  } 
   delay(1000);
   servo.write(0);
   delay(10000);
