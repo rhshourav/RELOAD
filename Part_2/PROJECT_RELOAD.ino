@@ -1,19 +1,21 @@
 //Including Liberys
 #include <ESP8266WiFi.h>
+#include <SPI.h>
 #include <Wire.h>
+#include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <UniversalTelegramBot.h>
 #include <WiFiClientSecure.h>
 #include <ArduinoJson.h>
+#include <Servo.h>
+#include <ESP8266Ping.h>
 
-//WIFI Credentials
-const char* ssid = "TEST";
-const char* password = "TEST1234";
-/*
+
+
 //WIFI Credentials
 const char* ssid = "WiFi Ki Tor Bap Er";
 const char* password = "f0kirni007";
-*/
+
 // Initialize Telegram BOT
 #define BOTtoken "6593502902:AAGsV9AvosqFBzgwKxPCRg5e3LJEUvowzmk"
 #define CHAT_ID "6348432516"
@@ -28,6 +30,9 @@ UniversalTelegramBot bot(BOTtoken, client);
 int botRequestDelay = 1000;
 unsigned long lastTimeBotRan;
 
+//initing Servo
+Servo servo;
+
 
 
 //defining Variables
@@ -39,6 +44,11 @@ unsigned long lastTimeBotRan;
 
 //VARIABLE FOR LIBERY
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+///Variable for u
+const char* remote_host = "8.8.8.8";
+int num_ping;
+
 
 
 
@@ -53,6 +63,17 @@ void setup(){
   }
 
   delay(20);
+  //initial the library 
+
+  
+  
+  //initing servo 
+  servo.attach(12); //D6
+  servo.write(0);
+  delay(2000);
+
+
+
   //Showing inting thigs
   display.clearDisplay();
   logo();
@@ -76,7 +97,6 @@ void setup(){
    // Connect to Wi-Fi
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-
   #ifdef ESP32
     client.setCACert(TELEGRAM_CERTIFICATE_ROOT); // Add root certificate for api.telegram.org
   #endif
@@ -109,8 +129,25 @@ void setup(){
   display.println(WiFi.localIP());
   display.display();
   delay(4000);
+  
+  // Check for net conectiviety
+   Ping.ping(remote_host, 1);  
+   num_ping = Ping.averageTime();
     
+   Serial.println(num_ping);
+
+   while (num_ping == 0){
+      Ping.ping(remote_host, 2);  
+    num_ping = Ping.averageTime();
     
+    Serial.println("Waiting to be connected to internet.");
+    res();
+    cle();
+    display.println("Waiting For Internet Connection");
+    display.display();
+    delay(1000);
+    
+    }
   #ifdef ESP8266
     configTime(0, 0, "time.google.com");      // get UTC time via NTP
     client.setTrustAnchors(&cert); // Add root certificate for api.telegram.org
@@ -148,7 +185,31 @@ void loop(){
     wf_con();
   }
 
+  ///Show Ping
+  count_ping();
 
+  //Chek FOr NET
+  if (num_ping == 0 ){
+    while (num_ping == 0){
+      Ping.ping(remote_host, 2);  
+    num_ping = Ping.averageTime();
+    
+    Serial.println("Waiting to be connected to internet.");
+    res();
+    cle();
+    display.println("Waiting For Internet Connection");
+    display.display();
+    delay(1000);
+    
+    }
+    ///Sending alart messge 
+    String welcome = "Hey, Shourav.\n";
+    welcome += "I Did't Have Net Connection.\n";
+    welcome += "But do not worry. Now i am up and running.\n";
+    welcome += "Waiting for your Command.\n";
+    bot.sendMessage(CHAT_ID, welcome, "");
+         
+  }
   
 }
 
@@ -218,6 +279,7 @@ void handleNewMessages(int numNewMessages) {
       display.setCursor(0, 20);
       display.println("Command"); 
       display.display();
+      serv();
       //delay(10000);
       
       String message1 = " Command Executed.";
@@ -241,6 +303,7 @@ void handleNewMessages(int numNewMessages) {
       display.setCursor(0, 20);
       display.println("Command"); 
       display.display();
+      serv1();
       //delay(10000);
       
       String message1 = " Command Executed.";
@@ -463,4 +526,52 @@ static const uint8_t logo[1024] = {
   display.drawBitmap(0, 0, logo, 128, 64, 1);
   display.display();
  
+}
+
+
+//Servo Function
+void serv() {
+  for(int i; i <= 145; i++ ){
+    servo.write(i);
+    delay(100);
+  } 
+  delay(1000);
+  servo.write(0);
+  delay(10000);
+}
+
+//Servo Function
+void serv1() {
+  servo.write(145);//145
+  delay(3000);
+  servo.write(0);
+  delay(10000);
+}
+
+
+//Ping Function
+void count_ping(){
+  Ping.ping(remote_host, 2);  
+  num_ping = Ping.averageTime();
+    
+  Serial.println(num_ping);
+
+  display.setTextSize(2);
+  display.setCursor(0,0);
+  display.println("Ping:");
+  display.display(); 
+
+  display.setTextSize(3);
+  display.setCursor(35,23);
+  display.println(num_ping);
+  display.display(); 
+
+  display.setTextSize(2);
+  display.setCursor(75,29);
+  display.println("ms");
+  display.display();
+
+  delay(50); 
+  display.clearDisplay();
+
 }
