@@ -1,20 +1,18 @@
 //Including Liberys
 #include <ESP8266WiFi.h>
-#include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <UniversalTelegramBot.h>
 #include <WiFiClientSecure.h>
 #include <ArduinoJson.h>
-#include <Servo.h>
 #include <ESP8266Ping.h>
 
 
 
 //WIFI Credentials
-const char* ssid = "WiFi Ki Tor Bap Er";
-const char* password = "f0kirni007";
+const char* ssid = "TEST";
+const char* password = "TEST1234";
 
 // Initialize Telegram BOT
 #define BOTtoken "6593502902:AAGsV9AvosqFBzgwKxPCRg5e3LJEUvowzmk"
@@ -30,8 +28,6 @@ UniversalTelegramBot bot(BOTtoken, client);
 int botRequestDelay = 1000;
 unsigned long lastTimeBotRan;
 
-//initing Servo
-Servo servo;
 
 
 
@@ -49,7 +45,11 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 const char* remote_host = "8.8.8.8";
 int num_ping;
 
-
+//Global Variables
+const int statePin = 13;
+int defaultState = HIGH;
+const int pushButton =12;
+const int ledInd = 14;
 
 
 void setup(){
@@ -61,18 +61,15 @@ void setup(){
     Serial.println(F("SSD1306 allocation failed"));
     for(;;); // Don't proceed, loop forever
   }
-
+ // Wire.begin(5, 6);
   delay(20);
   //initial the library 
-
+  pinMode(statePin, OUTPUT);
+  pinMode(pushButton, INPUT);
+  pinMode(ledInd, OUTPUT);
   
-  
-  //initing servo 
-  servo.attach(12); //D6
-  servo.write(0);
-  delay(2000);
-
-
+  digitalWrite(statePin, defaultState);
+  digitalWrite(ledInd, defaultState);
 
   //Showing inting thigs
   display.clearDisplay();
@@ -154,7 +151,7 @@ void setup(){
   #endif
   ///SENDING ONLINE MASSAGE
   String welcome = "Hey, Shourav.\n";
-  welcome += "Just Saying I am online.\n\n";
+  welcome += "It's Multiplug. I am online.\n\n";
   bot.sendMessage(CHAT_ID, welcome, "");
 
   res();
@@ -177,7 +174,12 @@ void loop(){
 
 
 
-
+  digitalWrite(statePin, defaultState);
+  digitalWrite(ledInd, defaultState);
+  if (digitalRead(pushButton)== HIGH){
+    defaultState = !defaultState;
+    delay(400);
+  }
 
 
   ///THISH WILL RECONNECT IF DISCONNECTED
@@ -207,6 +209,7 @@ void loop(){
     welcome += "I Did't Have Net Connection.\n";
     welcome += "But do not worry. Now i am up and running.\n";
     welcome += "Waiting for your Command.\n";
+    welcome += "'M'";
     bot.sendMessage(CHAT_ID, welcome, "");
          
   }
@@ -257,6 +260,10 @@ void handleNewMessages(int numNewMessages) {
       welcome += "Use the following commands Can Be Execute Via RELOAD.\n\n";
       welcome += "/ip To Show Loacal IP. \n";
       welcome += "/on To Turn On Laptop. \n";
+      welcome += "/mOn To Turn On Multiplug.\n";
+      welcome += "/mOff To Turn Off Multiplug.\n";
+      welcome += "/status To get Ping, IP and other Status.\n ";
+      welcome += "TurnOn To turn All on";
       bot.sendMessage(chat_id, welcome, "");
     }
     //BOT IP FUNCTION
@@ -268,9 +275,14 @@ void handleNewMessages(int numNewMessages) {
       cle();
     }
     //BOT PC ON
-    if (text == "/on" || text == "/On" || text == "/ON") {
+    if (text == "/mOn" || text == "/mon" || text == "/MON") {
+      if (defaultState == HIGH){
+        String message= "COMMAND RECIVED.\n";
+      message += "Dude It's Already ON.\n";
+      bot.sendMessage(chat_id, message, "");
+      }else{
       String message= "COMMAND RECIVED.\n";
-      message += "Truning On Laptop.\n";
+      message += "Truning On Multiplug.\n";
       bot.sendMessage(chat_id, message, "");
       res();
       cle();
@@ -279,9 +291,7 @@ void handleNewMessages(int numNewMessages) {
       display.setCursor(0, 20);
       display.println("Command"); 
       display.display();
-      serv();
-      //delay(10000);
-      
+      defaultState = HIGH;
       String message1 = " Command Executed.";
       bot.sendMessage(chat_id, message1, "");
       cle();
@@ -291,10 +301,16 @@ void handleNewMessages(int numNewMessages) {
       res();
       cle();
     }
-    //BOT PC OFF
-    if (text == "/off" || text == "/Off" || text == "/OFF") {
+    }
+  
+    if (text == "/mOff" || text == "/moff" || text == "/MOFF") {
+      if (defaultState == LOW){
+        String message= "COMMAND RECIVED.\n";
+      message += "Dude It's Already OFF.\n";
+      bot.sendMessage(chat_id, message, "");
+      }else{
       String message= "COMMAND RECIVED.\n";
-      message += "Truning OFF Laptop.\n";
+      message += "Truning OFF Multiplug.\n";
       bot.sendMessage(chat_id, message, "");
       res();
       cle();
@@ -303,8 +319,7 @@ void handleNewMessages(int numNewMessages) {
       display.setCursor(0, 20);
       display.println("Command"); 
       display.display();
-      serv1();
-      //delay(10000);
+ 
       
       String message1 = " Command Executed.";
       bot.sendMessage(chat_id, message1, "");
@@ -314,15 +329,22 @@ void handleNewMessages(int numNewMessages) {
       delay(5000);
       res();
       cle();
-    }
+    }}
     
-    if (text == "/state") {
-      //if (digitalRead(ledPin)){
-        //bot.sendMessage(chat_id, "LED is ON", "");
-      //}
-      //else{
-        //bot.sendMessage(chat_id, "LED is OFF", "");
-      //}
+    if (text == "/state" || text == "/State" || text == "STATE") {
+      String message = "Hey This Status From Multiplug.\n";
+      message += "Connected TO:"+ String(ssid) + "\n";
+      message += "IP For Muptiplug :" + ipAddress.toString()+"\n";
+      Ping.ping(remote_host, 4);  
+      num_ping = Ping.averageTime();
+      message += "Current Ping: " + String(num_ping) + "ms\n";
+     if (defaultState == HIGH){
+      message += "Power Status: ON\n";
+     }else{
+      message += "Power Status: OFF\n";
+     }
+     bot.sendMessage(chat_id, message, "");
+     cle();
     }
   }
 }
@@ -373,7 +395,36 @@ void wf_con(){
   
   }
    
-  void logo(){
+ 
+
+//Ping Function
+void count_ping(){
+  Ping.ping(remote_host, 2);  
+  num_ping = Ping.averageTime();
+    
+  Serial.println(num_ping);
+
+  display.setTextSize(2);
+  display.setCursor(0,0);
+  display.println("Ping:");
+  display.display(); 
+
+  display.setTextSize(3);
+  display.setCursor(35,23);
+  display.println(num_ping);
+  display.display(); 
+
+  display.setTextSize(2);
+  display.setCursor(75,29);
+  display.println("ms");
+  display.display();
+
+  delay(50); 
+  display.clearDisplay();
+
+}
+ void logo(){    
+  
     
 static const uint8_t logo[1024] = {
   
@@ -443,16 +494,19 @@ static const uint8_t logo[1024] = {
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
 
 };
-     
+    
+
   // Draw bitmap on the screen
   display.drawBitmap(0, 0, logo, 128, 64, 1);
   display.display();
     
   }
-
-void creator() {
   
-static const uint8_t logo[1024] = {
+void creator() {
+  // Clear the buffer.
+  display.clearDisplay();
+  
+static const uint8_t logo1[1024] = {
 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x80, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xff, 0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x3f, 0xff, 0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 0xff, 0xff, 0xbb, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x03, 0xff, 0xff, 0xff, 0xff, 
@@ -519,59 +573,9 @@ static const uint8_t logo[1024] = {
     0xff, 0xff, 0xff, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1f, 0xff, 0xff
   
 };
-  // Clear the buffer.
-  display.clearDisplay();
   
   // Draw bitmap on the screen
-  display.drawBitmap(0, 0, logo, 128, 64, 1);
+  display.drawBitmap(0, 0, logo1, 128, 64, 1);
   display.display();
  
-}
-
-
-//Servo Function
-void serv() {
-  for(int i; i <= 145; i++ ){
-    servo.write(i);
-    delay(100);
-  } 
-  delay(1000);
-  servo.write(0);
-  delay(10000);
-}
-
-//Servo Function
-void serv1() {
-  servo.write(145);//145
-  delay(3000);
-  servo.write(0);
-  delay(10000);
-}
-
-
-//Ping Function
-void count_ping(){
-  Ping.ping(remote_host, 2);  
-  num_ping = Ping.averageTime();
-    
-  Serial.println(num_ping);
-
-  display.setTextSize(2);
-  display.setCursor(0,0);
-  display.println("Ping:");
-  display.display(); 
-
-  display.setTextSize(3);
-  display.setCursor(35,23);
-  display.println(num_ping);
-  display.display(); 
-
-  display.setTextSize(2);
-  display.setCursor(75,29);
-  display.println("ms");
-  display.display();
-
-  delay(50); 
-  display.clearDisplay();
-
 }
