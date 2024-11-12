@@ -208,7 +208,7 @@ void displayStaticMessage(String message) {
   display.print(message);
   display.display();
   
-  delay(3000);  // Display for 3 seconds before clearing
+  delay(1500);  // Display for 3 seconds before clearing
 }
 
 // Function to scroll the message on the OLED display
