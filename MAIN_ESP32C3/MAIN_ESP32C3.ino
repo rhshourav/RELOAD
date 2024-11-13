@@ -6,7 +6,9 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include "relogo.h"
-
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/queue.h"
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
