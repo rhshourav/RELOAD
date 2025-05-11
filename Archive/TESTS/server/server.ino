@@ -50,4 +50,8 @@ void loop () {
     }
     client.stop();                // tarminates the connection with the client
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 8a7ce65297df2dec5a6fbe25181b472864c964a7

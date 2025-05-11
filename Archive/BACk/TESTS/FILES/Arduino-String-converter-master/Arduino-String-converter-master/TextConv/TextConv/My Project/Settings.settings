@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿<?xml version='1.0' encoding='utf-8'?>
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" UseMySettingsClassName="true">
   <Profiles>
@@ -5,3 +6,12 @@
   </Profiles>
   <Settings />
 </SettingsFile>
+=======
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" UseMySettingsClassName="true">
+  <Profiles>
+    <Profile Name="(Default)" />
+  </Profiles>
+  <Settings />
+</SettingsFile>
+>>>>>>> 8a7ce65297df2dec5a6fbe25181b472864c964a7

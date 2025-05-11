@@ -42,4 +42,8 @@ void loop () {
   client.flush();
   digitalWrite(ledPin, HIGH);
   delay(2000);                  // client will trigger the communication after two seconds
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 8a7ce65297df2dec5a6fbe25181b472864c964a7

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Release\TextConv.exe.config
 E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Release\TextConv.exe
 E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Release\TextConv.pdb
@@ -8,3 +9,15 @@ E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\Te
 E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.exe
 E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.xml
 E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.pdb
+=======
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Release\TextConv.exe.config
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Release\TextConv.exe
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Release\TextConv.pdb
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Release\TextConv.xml
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.TextConverter.resources
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.Resources.resources
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.vbproj.GenerateResource.Cache
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.exe
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.xml
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.pdb
+>>>>>>> 8a7ce65297df2dec5a6fbe25181b472864c964a7

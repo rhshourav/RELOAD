@@ -1,5 +1,6 @@
 # RELOAD
 
+<<<<<<< HEAD
 This repository contains smart grid and automation projects using ESP32 and ESP8266 devices.
 
 ## New: ESP32-C3 Laptop Power Controller (Project reload)
@@ -48,6 +49,8 @@ A smart controller for remotely managing a laptop motherboard (Lenovo) powered b
 
 ## Legacy: Smart Grid System
 
+=======
+>>>>>>> 8a7ce65297df2dec5a6fbe25181b472864c964a7
 This is a smart grid system of ESP32 and ESP8266 devices that communicate with each other using WiFi.
 
 ## Features
