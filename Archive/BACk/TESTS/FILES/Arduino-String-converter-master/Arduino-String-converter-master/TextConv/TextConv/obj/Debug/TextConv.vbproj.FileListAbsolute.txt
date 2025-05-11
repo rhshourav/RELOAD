@@ -1,0 +1,22 @@
+H:\Users\Dave\AppData\Local\Temporary Projects\TextConv\bin\Debug\TextConv.exe.config
+H:\Users\Dave\AppData\Local\Temporary Projects\TextConv\bin\Debug\TextConv.exe
+H:\Users\Dave\AppData\Local\Temporary Projects\TextConv\bin\Debug\TextConv.pdb
+H:\Users\Dave\AppData\Local\Temporary Projects\TextConv\bin\Debug\TextConv.xml
+H:\Users\Dave\AppData\Local\Temporary Projects\TextConv\obj\Debug\TextConv.vbprojResolveAssemblyReference.cache
+H:\Users\Dave\AppData\Local\Temporary Projects\TextConv\obj\Debug\TextConv.Form1.resources
+H:\Users\Dave\AppData\Local\Temporary Projects\TextConv\obj\Debug\TextConv.Resources.resources
+H:\Users\Dave\AppData\Local\Temporary Projects\TextConv\obj\Debug\TextConv.vbproj.GenerateResource.Cache
+H:\Users\Dave\AppData\Local\Temporary Projects\TextConv\obj\Debug\TextConv.exe
+H:\Users\Dave\AppData\Local\Temporary Projects\TextConv\obj\Debug\TextConv.xml
+H:\Users\Dave\AppData\Local\Temporary Projects\TextConv\obj\Debug\TextConv.pdb
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Debug\TextConv.exe.config
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Debug\TextConv.exe
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Debug\TextConv.pdb
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Debug\TextConv.xml
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Debug\TextConv.TextConverter.resources
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Debug\TextConv.Resources.resources
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Debug\TextConv.vbproj.GenerateResource.Cache
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Debug\TextConv.exe
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Debug\TextConv.xml
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Debug\TextConv.pdb
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Debug\TextConv.vbprojResolveAssemblyReference.cache

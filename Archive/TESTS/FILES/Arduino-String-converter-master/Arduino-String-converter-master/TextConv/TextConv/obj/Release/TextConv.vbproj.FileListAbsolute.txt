@@ -1,0 +1,10 @@
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Release\TextConv.exe.config
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Release\TextConv.exe
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Release\TextConv.pdb
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\bin\Release\TextConv.xml
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.TextConverter.resources
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.Resources.resources
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.vbproj.GenerateResource.Cache
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.exe
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.xml
+E:\OneDrive\Daten\Entwicklung\Web\Textconverter\TextConv\TextConv\obj\Release\TextConv.pdb
