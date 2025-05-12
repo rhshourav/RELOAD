@@ -25,7 +25,7 @@ This project provides a simple test sketch for measuring voltage using a voltage
 - The junction between R1 and R2 goes to ESP32C3 pin 0 (ADC2)
 
 ## Example Resistor Values
-- R1 = 9.66 kΩ (measured value)
+- R1 = 8.332 kΩ (measured value)
 - R2 = 2.19 kΩ (measured value)
 - Use a multimeter to measure your actual resistor values and update the code accordingly.
 
