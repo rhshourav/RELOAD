@@ -38,6 +38,9 @@ bool adapterPresent = false;
 bool batteryPresent = false;
 bool laptopOn = false;
 String lastEvent = "";
+unsigned long lastEventTime = 0;
+bool showEventLog = false;
+unsigned long lastEventDisplay = 0;
 
 // --- Helper Functions ---
 void showLogo() {
@@ -47,21 +50,107 @@ void showLogo() {
   delay(3000);
 }
 
-void showStatus() {
+void showStatus(bool showEvent = false) {
   display.clearDisplay();
+
+  // Title - Centered, Bold
+  display.setTextSize(2);
+  display.setTextColor(SSD1306_WHITE);
+  int16_t x1, y1;
+  uint16_t w, h;
+  display.getTextBounds("RELOAD", 0, 0, &x1, &y1, &w, &h);
+  display.setCursor((SCREEN_WIDTH - w) / 2, 0);
+  display.print("RELOAD");
+
+  // Icons row (spaced evenly)
   display.setTextSize(1);
-  display.setCursor(0, 0);
-  display.print("Adapter: "); display.println(adapterPresent ? "ON" : "OFF");
-  display.print("Battery: "); display.println(batteryPresent ? "ON" : "OFF");
-  display.print("Laptop:  "); display.println(laptopOn ? "ON" : "OFF");
-  display.print("Event: "); display.println(lastEvent);
+  int y = 22;
+  int iconSpacing = 32;
+  int x = 0;
+
+  // Battery Icon + %
+  int batteryLevel = batteryPresent ? (adapterPresent ? 100 : 40) : 0; // Example logic
+  x = 0;
+  display.drawRect(x, y, 18, 8, SSD1306_WHITE); // battery body
+  display.fillRect(x + 18, y + 2, 2, 4, SSD1306_WHITE); // battery tip
+  int fill = map(batteryLevel, 0, 100, 0, 14);
+  if (batteryLevel > 0) display.fillRect(x + 2, y + 2, fill, 4, SSD1306_WHITE);
+  display.setCursor(x, y + 12);
+  display.print("BAT");
+  display.setCursor(x, y + 22);
+  if (batteryLevel > 0) {
+    display.print(batteryLevel); display.print("%");
+  } else {
+    display.print("--");
+  }
+
+  // Adapter Icon
+  x += iconSpacing;
+  if (adapterPresent) {
+    display.drawCircle(x + 8, y + 4, 4, SSD1306_WHITE); // plug circle
+    display.drawLine(x + 8, y + 8, x + 8, y + 12, SSD1306_WHITE); // plug prong
+    display.drawLine(x + 6, y + 12, x + 10, y + 12, SSD1306_WHITE); // plug base
+  } else {
+    display.drawCircle(x + 8, y + 4, 4, SSD1306_WHITE);
+  }
+  display.setCursor(x, y + 12);
+  display.print("ADP");
+
+  // Laptop Icon
+  x += iconSpacing;
+  display.drawRect(x, y, 16, 8, SSD1306_WHITE); // screen
+  display.drawLine(x, y + 8, x + 16, y + 8, SSD1306_WHITE); // base
+  if (laptopOn) {
+    display.fillRect(x + 2, y + 2, 12, 4, SSD1306_WHITE); // filled screen
+  }
+  display.setCursor(x, y + 12);
+  display.print("LAP");
+  display.setCursor(x, y + 22);
+  display.print(laptopOn ? "ON" : "OFF");
+
+  // WiFi Icon + Signal
+  x += iconSpacing;
+  int wifiStrength = WiFi.status() == WL_CONNECTED ? 3 : 0; // 0-3 bars
+  if (WiFi.status() == WL_CONNECTED) {
+    for (int i = 0; i < wifiStrength; i++) {
+      display.fillRect(x + 2 + i * 3, y + 8 - i * 2, 2, 2 + i * 2, SSD1306_WHITE);
+    }
+  } else {
+    display.drawRect(x + 2, y + 8, 8, 2, SSD1306_WHITE);
+  }
+  display.setCursor(x, y + 12);
+  display.print("WiFi");
+  display.setCursor(x, y + 22);
+  display.print(WiFi.status() == WL_CONNECTED ? "OK" : "--");
+
+  // Section separator
+  //display.drawLine(0, 38, SCREEN_WIDTH, 38, SSD1306_WHITE);
+
+  // Last event/message (multi-line if needed)
+  if (showEvent) {
+    display.setTextSize(1);
+    display.setCursor(2, 41);
+    int maxLen = 21;
+    String msg = lastEvent;
+    if (msg.length() > maxLen) {
+      display.print(msg.substring(0, maxLen));
+      display.setCursor(2, 51);
+      display.print(msg.substring(maxLen));
+    } else {
+      display.print(msg);
+    }
+  }
+
   display.display();
 }
 
 void sendLog(String msg) {
   bot.sendMessage(CHAT_ID, msg, "");
   lastEvent = msg;
-  showStatus();
+  lastEventTime = millis();
+  showEventLog = true;
+  lastEventDisplay = millis();
+  showStatus(true);
 }
 
 // --- Sensing Functions ---
@@ -196,7 +285,18 @@ void loop() {
     lastTimeBotRan = millis();
   }
   checkPowerEvents();
-  showStatus();
+
+  // Show event log for 5 seconds after update, and every 10 seconds for 5 seconds
+  unsigned long now = millis();
+  bool showEvent = false;
+  if (showEventLog && (now - lastEventDisplay < 5000)) {
+    showEvent = true;
+  } else if ((now - lastEventTime > 10000) && (now - lastEventTime < 15000)) {
+    showEvent = true;
+  } else {
+    showEventLog = false;
+  }
+  showStatus(showEvent);
   delay(1000);
 }
 // --- End of File --- 
