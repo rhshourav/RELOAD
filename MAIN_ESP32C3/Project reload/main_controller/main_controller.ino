@@ -8,14 +8,24 @@
 #include <ArduinoJson.h>
 #include "relogo.h"
 
+
 // --- Pin Assignments ---
 #define RELAY_PIN         10   // Relay to boost converter
 #define ADAPTER_SENSE_PIN 1    // ADC1: 12V adapter sense
-#define BATTERY_SENSE_PIN 0    // ADC2: 12V battery sense
+#define BATTERY_SENSE_PIN 0     // ADC2: 12V battery sense
 #define STATUS_LED_PIN    9    // Digital in: Laptop status LED
 #define PWR_BTN_PIN       8    // Digital out: Simulate power button
 #define OLED_SDA          3    // I2C SDA
 #define OLED_SCL          2    // I2C SCL
+
+// --- Voltage Divider resistor values (in Ohms)
+const float R1 = 8332.0; //Top Resistor (8.332k Measured)
+const float R2 = 2190.0; // Bootom resistor (2.19k)
+
+// --- ESP32 ADC properties 
+const float ADC_MAX = 4095.0; // 12-bit ADC
+const float VREF = 3.3;       // Reference Voltage (v)
+
 
 // --- OLED Setup ---
 #define SCREEN_WIDTH 128
@@ -51,6 +61,11 @@ void showLogo() {
 }
 
 void showStatus(bool showEvent = false) {
+  int adcValue = analogRead(BATTERY_SENSE_PIN);
+  float vOut = (adcValue / ADC_MAX) * VREF;
+  float vIn = vOut * (R1 + R2) / R2;
+  int batteryLevel=(vIn - 11.4) * 100;
+
   display.clearDisplay();
 
   // Title - Centered, Bold
@@ -69,7 +84,7 @@ void showStatus(bool showEvent = false) {
   int x = 0;
 
   // Battery Icon + %
-  int batteryLevel = batteryPresent ? (adapterPresent ? 100 : 40) : 0; // Example logic
+  //int batteryLevel = batteryPresent ? (adapterPresent ? 100 : 40) : 0; // Example logic
   x = 0;
   display.drawRect(x, y, 18, 8, SSD1306_WHITE); // battery body
   display.fillRect(x + 18, y + 2, 2, 4, SSD1306_WHITE); // battery tip
@@ -243,6 +258,25 @@ void checkPowerEvents() {
   laptopOn = newLaptop;
 }
 
+// --- Voltage Detection
+/*
+void readVoltage(){
+  int adcValue = analogRead(BATTERY_SENSE_PIN);
+  float vOut = (adcValue / ADC_MAX) * VREF;
+  float vIn = vOut * (R1 + R2) / R2;
+
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 0);
+  display.println("Voltage Test");
+  display.print("ADC: "); display.println(adcValue);
+  display.print("Vout: "); display.print(vOut, 2); display.println("V");
+  display.print("Vin:  "); display.print(vIn, 2); display.println("V");
+  display.display();
+}
+*/
+
 // --- Setup ---
 void setup() {
   pinMode(RELAY_PIN, OUTPUT);
@@ -280,7 +314,7 @@ void setup() {
 
 // --- Main Loop ---
 void loop() {
-  if (millis() > lastTimeBotRan + botRequestDelay) {
+ if (millis() > lastTimeBotRan + botRequestDelay) {
     handleTelegram();
     lastTimeBotRan = millis();
   }
@@ -298,5 +332,6 @@ void loop() {
   }
   showStatus(showEvent);
   delay(1000);
+  //readVoltage();
 }
 // --- End of File --- 

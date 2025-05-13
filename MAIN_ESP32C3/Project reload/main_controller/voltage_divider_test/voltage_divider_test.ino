@@ -6,7 +6,7 @@
 #define VOLTAGE_PIN 0  // ADC2: Pin 0 (adjust as needed)
 
 // Voltage divider resistor values (in ohms)
-const float R1 = 9660.0; // Top resistor (9.66k)
+const float R1 = 8332.0; // Top resistor (8.332k)
 const float R2 = 2190.0; // Bottom resistor (2.19k)
 
 // ESP32 ADC properties
