@@ -35,6 +35,8 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 // --- WiFi & Telegram ---
 const char* ssid = "IT";
 const char* password = "TazinSayeed!@#";
+const char* ssid1 = "Subzero";
+const char* password1 = "Subzero123";
 #define BOTtoken "6593502902:AAGsV9AvosqFBzgwKxPCRg5e3LJEUvowzmk"
 #define CHAT_ID "6348432516"
 WiFiClientSecure client;
@@ -201,6 +203,8 @@ void handleTelegram() {
   for (int i = 0; i < numNewMessages; i++) {
     String text = bot.messages[i].text;
     if (text == "/on") {
+      sendLog("Checking Adpater and Battery......");
+      if( )
       sendLog("Turning laptop ON...");
       setRelay(true);
       delay(1000);
@@ -226,8 +230,11 @@ void handleTelegram() {
         sendLog("Failed to shut down laptop.");
       }
     } else if (text == "/status") {
+      int adcValue = analogRead(BATTERY_SENSE_PIN);
+      float vOut = (adcValue / ADC_MAX) * VREF;
+      float vIn = vOut * (R1 + R2) / R2;
       String msg = "Adapter: "; msg += adapterPresent ? "ON" : "OFF";
-      msg += "\nBattery: "; msg += batteryPresent ? "ON" : "OFF";
+      msg += "\nBattery: "; msg += batteryPresent ? "ON" : "OFF"; msg +=" Battery Voltage= "; msg += vIn;
       msg += "\nLaptop: "; msg += laptopOn ? "ON" : "OFF";
       msg += "\nEvent: "; msg += lastEvent;
       sendLog(msg);
@@ -291,12 +298,18 @@ void setup() {
   display.display();
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    display.clearDisplay();
-    display.setCursor(0, 0);
-    display.print("Connecting WiFi...");
-    display.display();
+
+  
+  while (WiFi.status() != WL_CONNECTED ) {
+      
+      delay(500);
+      display.clearDisplay();
+      display.setCursor(0, 0);
+      display.print("Connecting IT...");
+      display.display();
+    
+    
+    
   }
   display.clearDisplay();
   display.setCursor(0, 0);
