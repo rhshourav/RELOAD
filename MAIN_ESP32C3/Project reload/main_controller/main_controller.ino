@@ -20,10 +20,12 @@
 #define BOOT_VOLTAGE      4    // ADC3: Measure Boosted Voltage.
 
 // --- Voltage Divider resistor values (in Ohms)
-const float R1 = 8332.0; //Top Resistor (8.332k Measured)
-const float R2 = 2190.0; // Bootom resistor (2.19k)
-const float Rb1 = 9860.0; //Top Resistor (9.86k Measured for Boost Voltage)
-const float Rb2 = 787.0;  // Bootom Resistor (787 Ohm)
+const float R1 = 8342.0; // Top resistor (8.342k measured)
+const float R2 = 2190.0; // Bottom resistor (2.19k)
+const float R3 = 8640.0; // Top resistor (8.640k)
+const float R4 = 2190.0; // Bottom resistor (2.19k)
+const float R5 = 7060.0; // Top resistor (7.060k)
+const float R6 = 787.0;  // Bottom resistor (787 ohm)
 
 // --- ESP32 ADC properties 
 const float ADC_MAX = 4095.0; // 12-bit ADC
@@ -65,12 +67,28 @@ void showLogo() {
   delay(3000);
 }
 
-void showStatus(bool showEvent = false) {
+float readBatteryVolt(){
   int adcValue = analogRead(BATTERY_SENSE_PIN);
   float vOut = (adcValue / ADC_MAX) * VREF;
-  float vIn = vOut * (R1 + R2) / R2;
-  int batteryLevel=(vIn - 11.4) * 100;
+  float bat = vOut * (R1 + R2) / R2;
+  return bat;
+}
+float readAdapterVoltage(){
+  int adcValue = analogRead(ADAPTER_SENSE_PIN);
+  float vOut = (adcValue / ADC_MAX) * VREF;
+  float bat = vOut * (R3 + R4) / R4 ;
+  return bat;
+}
+float readBoostVoltage(){
+  int adcValue = analogRead(BOOT_VOLTAGE);
+  float vOut = (adcValue / ADC_MAX) * VREF;
+  float bat = vOut * (R5 + R6) / R6);
+  return bat;
+}
+void showStatus(bool showEvent = false) {
 
+  float vBAT =readBatteryVolt();
+  int batteryLevel = (vBAT - 11.4) *100 ;
   display.clearDisplay();
 
   // Title - Centered, Bold
@@ -238,11 +256,9 @@ void handleTelegram() {
         sendLog("Failed to shut down laptop.");
       }
     } else if (text == "/status") {
-      int adcValue = analogRead(BATTERY_SENSE_PIN);
-      float vOut = (adcValue / ADC_MAX) * VREF;
-      float vIn = vOut * (R1 + R2) / R2;
+      int batV = readBatteryVolt();
       String msg = "Adapter: "; msg += adapterPresent ? "ON" : "OFF";
-      msg += "\nBattery: "; msg += batteryPresent ? "ON" : "OFF"; msg +=" Battery Voltage= "; msg += vIn;
+      msg += "\nBattery: "; msg += batteryPresent ? "ON" : "OFF"; msg +=" Battery Voltage= "; msg += batV;
       msg += "\nLaptop: "; msg += laptopOn ? "ON" : "OFF";
       msg += "\nEvent: "; msg += lastEvent;
       sendLog(msg);
