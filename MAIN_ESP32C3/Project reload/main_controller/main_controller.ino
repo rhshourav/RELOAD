@@ -17,10 +17,13 @@
 #define PWR_BTN_PIN       8    // Digital out: Simulate power button
 #define OLED_SDA          3    // I2C SDA
 #define OLED_SCL          2    // I2C SCL
+#define BOOT_VOLTAGE      4    // ADC3: Measure Boosted Voltage.
 
 // --- Voltage Divider resistor values (in Ohms)
 const float R1 = 8332.0; //Top Resistor (8.332k Measured)
 const float R2 = 2190.0; // Bootom resistor (2.19k)
+const float Rb1 = 9860.0; //Top Resistor (9.86k Measured for Boost Voltage)
+const float Rb2 = 787.0;  // Bootom Resistor (787 Ohm)
 
 // --- ESP32 ADC properties 
 const float ADC_MAX = 4095.0; // 12-bit ADC
@@ -145,6 +148,7 @@ void showStatus(bool showEvent = false) {
 
   // Last event/message (multi-line if needed)
   if (showEvent) {
+    display.clearDisplay();
     display.setTextSize(1);
     display.setCursor(2, 41);
     int maxLen = 21;
@@ -181,6 +185,10 @@ bool readBattery() {
 }
 bool readLaptopOn() {
   return digitalRead(STATUS_LED_PIN) == HIGH;
+}
+bool readBoost(){
+  int val = analogRead(BOOT_VOLTAGE);
+  return val > 1000;
 }
 
 // --- Power Button Simulation ---
@@ -247,6 +255,7 @@ void checkPowerEvents() {
   bool newAdapter = readAdapter();
   bool newBattery = readBattery();
   bool newLaptop = readLaptopOn();
+  bool newBoost = readBoost();
   if (adapterPresent && !newAdapter) {
     sendLog("Power outage detected! Initiating shutdown...");
     pressPowerButton();
@@ -260,6 +269,7 @@ void checkPowerEvents() {
   if (!adapterPresent && newAdapter) {
     sendLog("Power restored! Adapter is back.");
   }
+  if ()
   adapterPresent = newAdapter;
   batteryPresent = newBattery;
   laptopOn = newLaptop;
