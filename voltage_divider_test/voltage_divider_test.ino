@@ -4,10 +4,16 @@
 // Adjust R1 and R2 as per your circuit
 
 #define VOLTAGE_PIN 0  // ADC2: Pin 0 (adjust as needed)
+#define VOLTAGE_PIN2 1 // ADC1
+#define VOlTAGE_PIN3 4 //ADC3
 
 // Voltage divider resistor values (in ohms)
-const float R1 = 8332.0; // Top resistor (8.332k measured)
+const float R1 = 8342.0; // Top resistor (8.342k measured)
 const float R2 = 2190.0; // Bottom resistor (2.19k)
+const float R3 = 8640.0; // Top resistor (8.640k)
+const float R4 = 2190.0; // Bottom resistor (2.19k)
+const float R5 = 7060.0; // Top resistor (7.060k)
+const float R6 = 787.0;  // Bottom resistor (787 ohm)
 
 // ESP32 ADC properties
 const float ADC_MAX = 4095.0; // 12-bit ADC
@@ -37,14 +43,27 @@ void setup() {
   display.println("Voltage Divider Test");
   display.print("R1: "); display.print(R1 / 1000.0, 2); display.println("k");
   display.print("R2: "); display.print(R2 / 1000.0, 2); display.println("k");
+  display.print("R3: "); display.print(R3 / 1000.0, 2); display.println("k");
+  display.print("R4: "); display.print(R4 / 1000.0, 2); display.println("k");
+  display.print("R5: "); display.print(R5 / 1000.0, 2); display.println("k");
+  display.print("R6: "); display.print(R6 / 1000.0, 2); display.println("k");
   display.display();
-  delay(2000);
+  delay(6000);
 }
 
 void loop() {
   int adcValue = analogRead(VOLTAGE_PIN);
   float vOut = (adcValue / ADC_MAX) * VREF;
   float vIn = vOut * (R1 + R2) / R2;
+
+  int  adcValue1 = analogRead(VOLTAGE_PIN2);
+  float vOut1 = (adcValue1 / ADC_MAX) * VREF;
+  float vIn1 = vOut1 * (R3 + R4) / R4;
+
+  int  adcValue2 = analogRead(VOlTAGE_PIN3);
+  float vOut2 = (adcValue2 / ADC_MAX) * VREF;
+  float vIn2 = vOut2 * (R5 + R6) / R6;
+
 
   Serial.print("ADC Value: ");
   Serial.print(adcValue);
@@ -58,10 +77,13 @@ void loop() {
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
   display.setCursor(0, 0);
-  display.println("Voltage Test");
-  display.print("ADC: "); display.println(adcValue);
-  display.print("Vout: "); display.print(vOut, 2); display.println("V");
-  display.print("Vin:  "); display.print(vIn, 2); display.println("V");
+  display.print("ADC1: "); display.print(adcValue);display.print("Vout1: "); display.print(vOut, 2); display.println("V");
+  display.print("ADC2: "); display.print(adcValue1);display.print("Vout2: "); display.print(vOut1, 2); display.println("V");
+  display.print("ADC3: "); display.print(adcValue2);display.print("Vout3: "); display.print(vOut2, 2); display.println("V");
+  display.print("Vin1:  "); display.print(vIn, 2); display.println("V");
+  display.print("Vin2:  "); display.print(vIn1, 2); display.println("V");
+  display.print("Vin2:  "); display.print(vIn2, 2); display.println("V");
+
   display.display();
 
   delay(1000);
